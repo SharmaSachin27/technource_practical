@@ -61,8 +61,8 @@
                     <label for="" class="form-label">Booking Slot</label>
                     <select name="booking_slot" class="form-control">
                         <option value="">SELECT Booking Slot</option>
-                        <option value="Morning" @if($bookingItem->booking_slot == "Morning") selected @endif>Morning</option>
-                        <option value="Evening" @if($bookingItem->booking_slot == "Evening") selected @endif>Evening</option>
+                        <option value="Morning" class="morning"  @if($bookingItem->booking_slot == "Morning") selected="" @endif>Morning</option>
+                        <option value="Evening"class="evening"  @if($bookingItem->booking_slot == "Evening") selected="" @endif>Evening</option>
                     </select>
                     @error('booking_slot')
                         <div class="text-danger">{{ $message }}</div>
@@ -84,6 +84,20 @@
 <script>
      $(document).ready(function() {
         $(".alert").alert('close');
+        $('#booking_time').on('change', function() {
+            var selectedTime = $(this).val();
+            var selectedHour = parseInt(selectedTime.split(':')[0]);
+
+            // Reset all options and remove 'selected' attribute
+            $('#booking_slot option').prop('selected', false).hide();
+
+            // Show/hide and select options based on the selected time
+            if (selectedHour >= 6 && selectedHour < 12) {
+                $('#booking_slot option.morning').show().prop('selected', true);
+            } else if (selectedHour >= 18 && selectedHour <= 23) {
+                $('#booking_slot option.evening').show().prop('selected', true);
+            }
+        });
      })
 </script>
 @endsection

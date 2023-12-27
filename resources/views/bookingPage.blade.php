@@ -57,8 +57,8 @@
                     <div class="mb-2">
                         <label for="booking_slot" class="form-label">Booking Slot</label>
                         <select id="booking_slot" name="booking_slot" class="form-control">
-                            <option value="Morning">Morning</option>
-                            <option value="Evening">Evening</option>
+                            <option value="Morning" class="morning">Morning</option>
+                            <option value="Evening" class="evening">Evening</option>
                         </select>
                         @error('booking_slot')
                             <div class="text-danger">{{ $message }}</div>
@@ -81,6 +81,22 @@
     @if(session('success'))
         toastr.success('{{ session('success') }}');
     @endif
+    $(document).ready(function() {
+        $('#booking_time').on('change', function() {
+            var selectedTime = $(this).val();
+            var selectedHour = parseInt(selectedTime.split(':')[0]);
+            // here added logic only morning and evening slot
+            if (selectedHour >= 6 && selectedHour < 12) {
+                console.log("Dkdk");
+                $('#booking_slot option.evening').prop('selected', false);
+                $('#booking_slot option.morning').prop('selected', true);
+            } else if (selectedHour >= 18 && selectedHour <= 23) {
+                console.log("abcd");
+                $('#booking_slot option.morning').prop('selected', false);
+                $('#booking_slot option.evening').prop('selected', true);
+            }
+        });
+    });
 </script>
 @endsection
 

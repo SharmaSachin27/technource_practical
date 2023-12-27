@@ -29,15 +29,17 @@ class BookingController extends Controller
 
     public function store(Request $request)
     {
+    // email unique logic added
     $request->validate([
         'name' => 'required|string',
-        'email' => 'required|email',
+        'email' => 'required|email|unique:bookings,email',
         'booking_type' => 'required|in:Full Day,Half Day',
         'booking_date' => 'required|date',
         'booking_slot' => 'required|in:Morning,Evening',
         'booking_time' => 'required',
     ]);
     $existingBookings = Booking::where('booking_date', $request->booking_date)->get();
+    // rules logic here as part of backend functionlity as update side
     if(!empty($existingBookings[0])) {
         foreach ($existingBookings as $booking) {
             if ($booking->booking_type === 'Full Day') {
@@ -104,7 +106,8 @@ class BookingController extends Controller
             'booking_time' => 'required',
         ]);
         $update = Booking::find($id);
-        $existingBookings = Booking::where('booking_date', $update->booking_date)->get();
+        // update functionlity is fixed
+        $existingBookings = Booking::where('booking_date', $update->booking_date)->where('id', '!=', $id)->get();
         if(!empty($existingBookings[0])) {
             foreach ($existingBookings as $booking) {
                 if ($booking->booking_type === 'Full Day') {
